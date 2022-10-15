@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cf.tencentqq.dao.MessagesinfoDao">
+
+    <resultMap id="BaseResultMap" type="com.cf.tencentqq.entity.Messagesinfo">
+        <!--@Table messagesinfo-->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="fromuserid" column="fromuserid" jdbcType="INTEGER"/>
+        <result property="touserid" column="touserid" jdbcType="INTEGER"/>
+        <result property="message" column="message" jdbcType="VARCHAR"/>
+        <result property="messagetypeid" column="messagetypeid" jdbcType="INTEGER"/>
+        <result property="messagestate" column="messagestate" jdbcType="INTEGER"/>
+        <result property="messagedate" column="messagedate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          id, fromuserid, touserid, message, messagetypeid, messagestate, messagedate
+        from messagesinfo
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          id, fromuserid, touserid, message, messagetypeid, messagestate, messagedate
+        from messagesinfo
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="fromuserid != null">
+                and fromuserid = #{fromuserid}
+            </if>
+            <if test="touserid != null">
+                and touserid = #{touserid}
+            </if>
+            <if test="message != null and message != ''">
+                and message = #{message}
+            </if>
+            <if test="messagetypeid != null">
+                and messagetypeid = #{messagetypeid}
+            </if>
+            <if test="messagestate != null">
+                and messagestate = #{messagestate}
+            </if>
+            <if test="messagedate != null">
+                and messagedate = #{messagedate}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+<!--    <select id="queryAll" resultMap="BaseResultMap">-->
+<!--        select-->
+<!--          id, fromuserid, touserid, message, messagetypeid, messagestate, messagedate-->
+<!--        from qq.messagesinfo-->
+<!--    </select>-->
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from messagesinfo
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="fromuserid != null">
+                and fromuserid = #{fromuserid}
+            </if>
+            <if test="touserid != null">
+                and touserid = #{touserid}
+            </if>
+            <if test="message != null and message != ''">
+                and message = #{message}
+            </if>
+            <if test="messagetypeid != null">
+                and messagetypeid = #{messagetypeid}
+            </if>
+            <if test="messagestate != null">
+                and messagestate = #{messagestate}
+            </if>
+            <if test="messagedate != null">
+                and messagedate = #{messagedate}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into messagesinfo(fromuserid, touserid, message, messagetypeid, messagestate, messagedate)
+        values (#{fromuserid}, #{touserid}, #{message}, #{messagetypeid}, #{messagestate}, #{messagedate})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into messagesinfo(fromuserid, touserid, message, messagetypeid, messagestate, messagedate)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.fromuserid}, #{entity.touserid}, #{entity.message}, #{entity.messagetypeid}, #{entity.messagestate}, #{entity.messagedate})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into messagesinfo(fromuserid, touserid, message, messagetypeid, messagestate, messagedate)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.fromuserid}, #{entity.touserid}, #{entity.message}, #{entity.messagetypeid}, #{entity.messagestate}, #{entity.messagedate})
+        </foreach>
+        on duplicate key update
+        fromuserid = values(fromuserid),
+        touserid = values(touserid),
+        message = values(message),
+        messagetypeid = values(messagetypeid),
+        messagestate = values(messagestate),
+        messagedate = values(messagedate)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update messagesinfo
+        <set>
+            <if test="fromuserid != null">
+                fromuserid = #{fromuserid},
+            </if>
+            <if test="touserid != null">
+                touserid = #{touserid},
+            </if>
+            <if test="message != null and message != ''">
+                message = #{message},
+            </if>
+            <if test="messagetypeid != null">
+                messagetypeid = #{messagetypeid},
+            </if>
+            <if test="messagestate != null">
+                messagestate = #{messagestate},
+            </if>
+            <if test="messagedate != null">
+                messagedate = #{messagedate},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from messagesinfo where id = #{id}
+    </delete>
+
+</mapper>
+
